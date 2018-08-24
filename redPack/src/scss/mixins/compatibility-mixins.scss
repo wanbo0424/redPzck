@@ -1,0 +1,221 @@
+/**
+ * @infor 兼容性混合器
+ * @user CC
+ * @date 2018-08-17 12:55:08
+ */
+
+/**
+ * 兼容跟混合器
+ * @param  {String} $css-name  css样式名
+ * @param  {String} $css-value css样式值
+ * @return {void}
+ */
+@mixin compati-mixin($css-name, $css-value) {
+	-webkit-#{$css-name}: $css-value;
+	#{$css-name}: $css-value;
+}
+
+/**
+ * 定义动画
+ * @param  {String} $animation 动画名
+ * @return {void}
+ */
+@mixin keyframes($animation) {
+	@-webkit-keyframes #{$animation} {
+		@content;
+	}
+	@-moz-keyframes #{$animation} {
+		@content;
+	}
+	@keyframes #{$animation} {
+		@content;
+	}
+}
+
+/**
+ * 怪异盒子模型
+ */
+@mixin box-sizing {
+	@include compati-mixin(box-sizing, border-box);
+}
+
+/**
+ * 阴影
+ * @param  {Array | String} $values 属性值数组 ( 水平偏移值 垂直偏移值 模糊值半径 颜色 )
+ * @return {void}
+ */
+@mixin box-shadow($values) {
+	@include compati-mixin(box-shadow, $values);
+}
+
+/**
+ * flex布局
+ */
+@mixin flex {
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: flex;
+}
+
+/**
+ * flex布局下，主轴的方向，即项目的排列方向
+ * @param  {String} $direction 
+ *         row（默认值）: 主轴为水平方向，起点在左端
+ *         row-reverse: 主轴为水平方向，起点在右端
+ *         column: 主轴为垂直方向，起点在上沿
+ *         column-reverse: 主轴为垂直方向，起点在下沿
+ * @return {void}
+ */
+@mixin flex-direction($direction) {
+	@include compati-mixin(flex-direction, $direction);
+}
+
+/**
+ * 如果一条轴线排不下，如何换行
+ * @param  {String} $type 
+ *         nowrap（默认）: 不换行
+ *         wrap: 换行，第一行在上方
+ *         wrap-reverse: 换行，第一行在下方
+ * @return {void}
+ */
+@mixin flex-wrap($type) {
+	@include compati-mixin(flex-wrap, $type);
+}
+
+/**
+ * flex-direction、flex-wrap 简写	
+ * @param  {String} $direction flex-direction
+ * @param  {String} $wrap      flex-wrap
+ * @return {void}
+ */
+@mixin flex-flow($direction, $wrap) {
+	@include compati-mixin(flex-flow, $direction $wrap);
+}
+
+/**
+ * 定义在主轴的对其方式
+ * @param  {String} $type 
+ *         flex-start（默认值）: 左对齐
+ *         flex-end: 右对齐
+ *         center:  居中
+ *         space-between: 两端对齐，项目之间的间隔都相等
+ *         space-around: 每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍
+ * @return {void}
+ */
+@mixin justify-content($type) {
+	@include compati-mixin(justify-content, $type);
+}
+
+/**
+ * 项目在交叉轴上如何对齐
+ * @param  {String} $type 
+ *         stretch（默认值）: 如果项目未设置高度或设为auto，将占满整个容器的高度
+ *         flex-start: 交叉轴的起点对齐
+ *         flex-end: 交叉轴的终点对齐
+ *         center: 交叉轴的中点对齐
+ *         baseline: 项目的第一行文字的基线对齐
+ * @return {void}
+ */
+@mixin align-items($type) {
+	@include compati-mixin(align-items, $type);
+}
+
+/**
+ * 多根轴线的对齐方式。如果项目只有一根轴线，该属性不起作用
+ * @param  {String} $type 
+ *         stretch（默认值）: 轴线占满整个交叉轴
+ *         flex-start: 与交叉轴的起点对齐
+ *         flex-end: 与交叉轴的终点对齐
+ *         center: 与交叉轴的中点对齐
+ *         space-between: 与交叉轴两端对齐，轴线之间的间隔平均分布
+ *         space-around: 每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍
+ * @return {void}
+ */
+@mixin align-content($type) {
+	@include compati-mixin(align-content, $type);
+}
+
+/**
+ * 排列顺序。数值越小，排列越靠前，默认为0
+ * @param  {Number} $number 排列顺序
+ * @return {void}
+ */
+@mixin order($number) {
+	@include compati-mixin(order, $number);
+}
+
+/**
+ * 项目的放大比例，默认为0，即如果存在剩余空间，也不放大 [等分剩余空间]
+ * @param  {Number} $number 放大比例
+ * @return {void}
+ */
+@mixin flex-grow($number) {
+	@include compati-mixin(flex-grow, $number);
+}
+
+/**
+ * 项目的缩小比例，默认为1，即如果空间不足，该项目将缩小
+ * @param  {Number} $number 缩小比例
+ * @return {void}
+ */
+@mixin flex-shrink($number) {
+	@include compati-mixin(flex-shrink, $number);
+}
+
+
+/**
+ * 定义了在分配多余空间之前，项目占据的主轴空间（main size）
+ * 浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。
+ * width或height属性一样的值（比如350px），则项目将占据固定空间
+ * @param  {Number} $number 空间大小
+ * @return {void}
+ */
+@mixin flex-basis($number) {
+	@include compati-mixin(flex-basis, $number);
+}
+
+/**
+ * flex-grow, flex-shrink 和 flex-basis 的简写
+ * @param  {String} $grow   flex-grow
+ * @param  {String} $shrink flex-shrink
+ * @param  {String} $basis  flex-basis
+ * @return {void}
+ */
+@mixin flex-short($grow, $shrink: none, $basis: none) {
+	@if $grow == auto {
+		@include compati-mixin(flex, $grow);
+	} @else if $grow == none {
+		@include compati-mixin(flex, $grow);
+	} @else {
+		@include compati-mixin(flex, $grow $shrink $basis);
+	}
+}
+
+/**
+ * lign-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。
+ * 默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch
+ * @param  {String} $type 同align-items
+ * @return {void}
+ */
+@mixin align-self($type) {
+	@include compati-mixin(align-self, $type);
+}
+
+/**
+ * 设置透明
+ * @param  {Double} $double 透明度
+ * @return {void}
+ */
+@mixin opacity($double) {
+	opacity: $double;
+	filter: grayscale($double * 100%);
+}
+
+/**
+ * 动画效果
+ * @param  {String} $value 设置的动画
+ * @return {void}
+ */
+@mixin animation($double) {
+	@include compati-mixin(animation, $double);
+}
