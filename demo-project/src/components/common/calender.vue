@@ -30,6 +30,7 @@
 
 <script>
 export default {
+  name:'Calender',
   data() {
     return {
       calendarHeader: ["日", "一", "二", "三", "四", "五", "六"],
