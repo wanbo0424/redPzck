@@ -3,9 +3,9 @@
     <input type="button" v-model="checktime">
     <div class="date" >
         <div class="header">
-            <span class="pre-btn" @click="pre">《</span>
+            <span class="pre-btn" @click=" pre"></span>
             <span class="now-y-m">{{nowYear}}年{{nowMonth+1}}月</span>
-            <span class="next-btn"  @click="next">》</span>
+            <span class="next-btn"  @click=" next"></span>
         </div>
         <div class="weeks">
             <span>日</span>
@@ -20,7 +20,7 @@
             <ul>
                 <li v-for="(dayobject, index) in days" 
                 @click="dayobject.flag && showDate(index,dayobject)" :key="index" 
-                :class="{today:today==index,select:select==index,pre:dayobject == ''}">{{dayobject.day}}</li>
+                :class="{today:today==index,select:select==index,pre:dayobject == '',chooseable:dayobject.flag}">{{dayobject.day}}</li>
             </ul>
         </div>
     </div>
@@ -33,13 +33,21 @@ import Vue from "vue";
 export default {
   name: "date",
   props: {
+    startMonth:{
+      type: Number,
+      default: () => {return 5}
+    },
+    endMonth:{
+      type: Number,
+      default: () => {return 10}
+    },
     startDate: {
       type: String,
       default: () => {return '2018-08-15'}
     },
     endDate: {
       type: String,
-      default: () => {return '2018-09-09'}
+      default: () => {return '2018-08-26'}
     }
   },
   data: function() {
@@ -58,20 +66,23 @@ export default {
       this.nowdate();
       this.init();
     });
-    console.log(this.days)
-  },
+    console.log(this.istoday)
+  }, 
   computed: {
-    today: function() {
-      var date = new Date();
-      if (
-        this.nowYear === date.getFullYear() &&
-        this.nowMonth === date.getMonth()
-      ) {
-        return this.getFirstDay(this.nowYear, this.nowMonth) + this.nowDate - 1;
-      }
-      return false;
-    },
+    today:{
+      get:function(){ 
+        var date = new Date();
+        if (
+          this.nowYear === date.getFullYear() &&
+          this.nowMonth === date.getMonth()
+        ) {
+          return  this.getFirstDay(this.nowYear, this.nowMonth) + this.nowDate - 1;
+        }
+        // return false;
+      },  
+    }
   },
+  
   methods: {
     /**
      * 获取当前年、月、日
@@ -98,6 +109,7 @@ export default {
       var first = new Date(year, month, 1);
       return first.getDay();
     },
+    
     /**
      * 初始化当月日期并显示
      */
@@ -108,7 +120,7 @@ export default {
       var tolLength = 42;
       // var dayLength = this.days.length;
       this.days.length = 0;
-      
+    
       if (firstDay != 0) {
         // 打印上个月的日期在本月列表的显示
         for (var i = 0; i < firstDay; i++) {
@@ -149,6 +161,7 @@ export default {
      */
     showDate(index,objectday) {
       this.select = index;
+      
       this.checktime =
         this.nowYear + "-" + (this.nowMonth + 1) + "-" + objectday.day;
         
@@ -157,6 +170,9 @@ export default {
      * 上一月显示
      */
     pre: function() {
+      if(this.nowMonth + 1 == this.startMonth){
+        return false
+      }
       if (this.nowMonth <= 0) {
         this.nowYear -= 1;
         this.nowMonth = 11;
@@ -166,9 +182,12 @@ export default {
       this.init();
     },
     /**
-     * 上一月显示
+     * 下一月显示
      */
     next: function() {
+      if(this.nowMonth + 1 == this.endMonth){
+        return
+      }
       if (this.nowMonth == 11) {
         this.nowYear += 1;
         this.nowMonth = 0;
@@ -185,7 +204,28 @@ export default {
   width: 100%;
 }
 .header{
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+.pre-btn::before{
+    content: '';   
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 4px solid red;
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(-45deg)
+}
+.next-btn::before{
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 4px solid red;
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(135deg)
 }
 ul{
   padding: 0px;
@@ -200,17 +240,12 @@ ul{
   text-align: center;
   line-height: 2rem;
   cursor: pointer;
-  color: gainsboro;
+  color: gray;
   transition: all 0.1s;
-  background-color: gray;
+  background-color: gainsboro;
   margin: 4px;
   border-radius: 6px;
-  .activity{
-    color: black;
-  }
-  .pre{
-    background-color: #fff
-  }
+  border-radius: 50%;
 }
 #calendar .weeks span {
   font-size: 16px;
@@ -230,5 +265,7 @@ ul{
 #calendar .content ul li.pre {
   background-color: #fff
 }
-
+#calendar .content ul li.chooseable{
+    color:black
+  }
 </style>
