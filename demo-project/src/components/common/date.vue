@@ -3,9 +3,9 @@
     <input type="button" v-model="checktime">
     <div class="date" >
         <div class="header">
-            <span class="pre-btn" @click="pre">《</span>
+            <span class="pre-btn" @click="pre" :class="{noPreMonth: nowMonth + 1 == startMonth}"></span>
             <span class="now-y-m">{{nowYear}}年{{nowMonth+1}}月</span>
-            <span class="next-btn"  @click="next">》</span>
+            <span class="next-btn"  @click="next" :class="{noNextMonth:nowMonth + 1 == endMonth}"></span>
         </div>
         <div class="weeks">
             <span>日</span>
@@ -19,27 +19,26 @@
         <div class="content">
             <ul>
                 <li v-for="(dayobject, index) in days" 
-                @click="dayobject.flag && showDate(index,dayobject)" :key="index" 
-                :class="{today:today==index,select:select==index,pre:dayobject == ''}">{{dayobject.day}}</li>
+                @click="dayobject.flag && showDate(dayobject)" :key="index" 
+                :class="{today:today==index, select:selectedMonth == nowMonth && selectedDate == dayobject.day, pre:dayobject == '',chooseable:dayobject.flag}">
+                {{dayobject.day}}</li>
             </ul>
         </div>
     </div>
-    
   </div>
 </template>
-var 
 <script type="text/ecmascript-6">
 import Vue from "vue";
 export default {
   name: "date",
-  props: {
+  props: { 
     startDate: {
       type: String,
       default: () => {return '2018-08-15'}
     },
     endDate: {
       type: String,
-      default: () => {return '2018-09-09'}
+      default: () => {return '2018-10-26'}
     }
   },
   data: function() {
@@ -51,6 +50,10 @@ export default {
       // 选择日期改变样式
       select: null,
       checktime: "",
+      startMonth:0,
+      endMonth:0,
+      selectedDate:new Date().getDate(),
+      selectedMonth:new Date().getMonth()
     };
   },
   created() {
@@ -59,19 +62,22 @@ export default {
       this.init();
     });
     console.log(this.days)
-  },
+  }, 
   computed: {
-    today: function() {
-      var date = new Date();
-      if (
-        this.nowYear === date.getFullYear() &&
-        this.nowMonth === date.getMonth()
-      ) {
-        return this.getFirstDay(this.nowYear, this.nowMonth) + this.nowDate - 1;
-      }
-      return false;
-    },
+    today:{
+      get:function(){ 
+        var date = new Date();
+        if (
+          this.nowYear === date.getFullYear() &&
+          this.nowMonth === date.getMonth()
+        ) {
+          return  this.getFirstDay(this.nowYear, this.nowMonth) + this.nowDate - 1;
+        }
+        // return false;
+      },  
+    }
   },
+  
   methods: {
     /**
      * 获取当前年、月、日
@@ -98,6 +104,7 @@ export default {
       var first = new Date(year, month, 1);
       return first.getDay();
     },
+    
     /**
      * 初始化当月日期并显示
      */
@@ -108,7 +115,7 @@ export default {
       var tolLength = 42;
       // var dayLength = this.days.length;
       this.days.length = 0;
-      
+    
       if (firstDay != 0) {
         // 打印上个月的日期在本月列表的显示
         for (var i = 0; i < firstDay; i++) {
@@ -127,6 +134,8 @@ export default {
         // 可点击的日期范围
         let st = this.startDate.split('-');
         let et = this.endDate.split('-');
+        this.startMonth = Number(st[1]);
+        this.endMonth = Number(et[1]);
         let startTime = new Date(st[0],st[1]-1,st[2]).getTime();
         let endTime = new Date(et[0],et[1]-1,et[2]).getTime();
         let currentTime = new Date(this.nowYear, this.nowMonth, dayobject.day).getTime();
@@ -145,18 +154,21 @@ export default {
       return y + "-" + m + "-" + d;
     },
     /**
-     * 显示被点击的日期
+     * 显示被点击的日期以及被点击的样式改变
      */
-    showDate(index,objectday) {
-      this.select = index;
+    showDate(dayobject) {
+      this.selectedDate = dayobject.day 
+      this.selectedMonth = this.nowMonth;
       this.checktime =
-        this.nowYear + "-" + (this.nowMonth + 1) + "-" + objectday.day;
-        
+        this.nowYear + "-" + (this.nowMonth + 1) + "-" + dayobject.day;  
     },
     /**
      * 上一月显示
      */
     pre: function() {
+      if(this.nowMonth + 1 == this.startMonth){
+        return false
+      }
       if (this.nowMonth <= 0) {
         this.nowYear -= 1;
         this.nowMonth = 11;
@@ -166,9 +178,12 @@ export default {
       this.init();
     },
     /**
-     * 上一月显示
+     * 下一月显示
      */
     next: function() {
+      if(this.nowMonth + 1 == this.endMonth){
+        return
+      }
       if (this.nowMonth == 11) {
         this.nowYear += 1;
         this.nowMonth = 0;
@@ -185,7 +200,38 @@ export default {
   width: 100%;
 }
 .header{
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+.pre-btn::before{
+    content: '';   
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 4px solid red;
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(-45deg);
+}
+.noPreMonth::before{
+    border: 4px solid black;
+    border-bottom: none;
+    border-right: none;
+  }
+.next-btn::before{
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 4px solid red;
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(135deg)
+}
+.noNextMonth::before{
+  border: 4px solid black;
+  border-bottom: none;
+  border-right: none;
 }
 ul{
   padding: 0px;
@@ -200,17 +246,12 @@ ul{
   text-align: center;
   line-height: 2rem;
   cursor: pointer;
-  color: gainsboro;
+  color: gray;
   transition: all 0.1s;
-  background-color: gray;
+  background-color: gainsboro;
   margin: 4px;
   border-radius: 6px;
-  .activity{
-    color: black;
-  }
-  .pre{
-    background-color: #fff
-  }
+  border-radius: 50%;
 }
 #calendar .weeks span {
   font-size: 16px;
@@ -230,5 +271,8 @@ ul{
 #calendar .content ul li.pre {
   background-color: #fff
 }
-
+#calendar .content ul li.chooseable{
+    color:black
+  }
+  
 </style>
