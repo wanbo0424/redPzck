@@ -3,9 +3,15 @@
     <input type="button" v-model="checktime">
     <div class="date" >
         <div class="header">
+<<<<<<< HEAD
             <span class="pre-btn" @click="pre" :class="{noPreMonth: nowMonth + 1 == startMonth}"></span>
             <span class="now-y-m">{{nowYear}}年{{nowMonth+1}}月</span>
             <span class="next-btn"  @click="next" :class="{noNextMonth:nowMonth + 1 == endMonth}"></span>
+=======
+            <span class="pre-btn" @click=" pre"></span>
+            <span class="now-y-m">{{nowYear}}年{{nowMonth+1}}月</span>
+            <span class="next-btn"  @click=" next"></span>
+>>>>>>> ff2ad838cca626b7bdef02678bffca77d0aa8480
         </div>
         <div class="weeks">
             <span>日</span>
@@ -19,9 +25,14 @@
         <div class="content">
             <ul>
                 <li v-for="(dayobject, index) in days" 
+<<<<<<< HEAD
                 @click="dayobject.flag && showDate(dayobject)" :key="index" 
                 :class="{today:today==index, select:selectedMonth == nowMonth && selectedDate == dayobject.day, pre:dayobject == '',chooseable:dayobject.flag}">
                 {{dayobject.day}}</li>
+=======
+                @click="dayobject.flag && showDate(index,dayobject)" :key="index" 
+                :class="{today:today==index,select:select==index,pre:dayobject == '',chooseable:dayobject.flag}">{{dayobject.day}}</li>
+>>>>>>> ff2ad838cca626b7bdef02678bffca77d0aa8480
             </ul>
         </div>
     </div>
@@ -31,14 +42,30 @@
 import Vue from "vue";
 export default {
   name: "date",
+<<<<<<< HEAD
   props: { 
+=======
+  props: {
+    startMonth:{
+      type: Number,
+      default: () => {return 5}
+    },
+    endMonth:{
+      type: Number,
+      default: () => {return 10}
+    },
+>>>>>>> ff2ad838cca626b7bdef02678bffca77d0aa8480
     startDate: {
       type: String,
       default: () => {return '2018-08-15'}
     },
     endDate: {
       type: String,
+<<<<<<< HEAD
       default: () => {return '2018-10-26'}
+=======
+      default: () => {return '2018-08-26'}
+>>>>>>> ff2ad838cca626b7bdef02678bffca77d0aa8480
     }
   },
   data: function() {
@@ -61,7 +88,11 @@ export default {
       this.nowdate();
       this.init();
     });
+<<<<<<< HEAD
     console.log(this.days)
+=======
+    console.log(this.istoday)
+>>>>>>> ff2ad838cca626b7bdef02678bffca77d0aa8480
   }, 
   computed: {
     today:{
@@ -156,9 +187,15 @@ export default {
     /**
      * 显示被点击的日期以及被点击的样式改变
      */
+<<<<<<< HEAD
     showDate(dayobject) {
       this.selectedDate = dayobject.day 
       this.selectedMonth = this.nowMonth;
+=======
+    showDate(index,objectday) {
+      this.select = index;
+      
+>>>>>>> ff2ad838cca626b7bdef02678bffca77d0aa8480
       this.checktime =
         this.nowYear + "-" + (this.nowMonth + 1) + "-" + dayobject.day;  
     },
@@ -211,6 +248,7 @@ export default {
     border: 4px solid red;
     border-bottom: none;
     border-right: none;
+<<<<<<< HEAD
     transform: rotate(-45deg);
 }
 .noPreMonth::before{
@@ -218,6 +256,10 @@ export default {
     border-bottom: none;
     border-right: none;
   }
+=======
+    transform: rotate(-45deg)
+}
+>>>>>>> ff2ad838cca626b7bdef02678bffca77d0aa8480
 .next-btn::before{
     content: '';
     display: inline-block;
@@ -227,11 +269,14 @@ export default {
     border-bottom: none;
     border-right: none;
     transform: rotate(135deg)
+<<<<<<< HEAD
 }
 .noNextMonth::before{
   border: 4px solid black;
   border-bottom: none;
   border-right: none;
+=======
+>>>>>>> ff2ad838cca626b7bdef02678bffca77d0aa8480
 }
 ul{
   padding: 0px;
@@ -274,5 +319,8 @@ ul{
 #calendar .content ul li.chooseable{
     color:black
   }
+<<<<<<< HEAD
   
+=======
+>>>>>>> ff2ad838cca626b7bdef02678bffca77d0aa8480
 </style>
