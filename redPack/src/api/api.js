@@ -11,7 +11,7 @@ export const getRedpackinfo = params =>{
     })
 }
 export const sendSms  = params =>{
-    return axios.post('https://leyoutest.fangte.com/V4/api/Customer/VerificationTransfer',params).then(res =>res.data)  
+    return axios.post('https://leyoutest.fangte.com/V4/api/Customer/VerificationTransfer',params)
 }
 
 export const nowReceive = params => {
