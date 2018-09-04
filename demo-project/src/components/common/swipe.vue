@@ -4,10 +4,10 @@
             <img :src="listSrc[nowIndex].src" >
         </div>
         <div class="img-type img-left">
-            <ul :style="{'width':' '+((listWidth*(listSrc.length))+1)+'rem', 'transform':'translate3d(-'+(listWidth*(nowIndex))+'rem,0,0)','transition':'all .3s '}">
+            <ul :style="{'width':ulWidth, 'transform':'translate3d(-'+(listWidth*(nowIndex))+'rem,0,0)','transition':'all .3s '}">
                 <li v-for="(li,index) in listSrc"  :key="index" >
                     <a :href="li.href?li.href:'javascript:;'">
-                        <img :src="li.src" class="slider-img" :class="{select: selected == index}"/>
+                        <img :src="li.src" class="slider-img" :class="{select: nowIndex == index}"/>
                     </a>
                 </li>
             </ul>
@@ -18,6 +18,13 @@
                  :style="{'width':50+'px','height':50+'px',}"> 《</div>
             <div class="arrow-right" @click="swich()"
                  :style="{'width':50+'px','height':50+'px'}"> 》</div>
+        </div>
+        <!-- 对应的点 -->
+        <div class="option">
+            <div>
+                <span v-for="(li,index) in listSrc"
+                      :class="{active:index == nowIndex}"></span>
+            </div>
         </div>
     </div>
 </template>
@@ -58,16 +65,14 @@ export default {
   },
   computed: {
     //ul宽度
-    // ulWidth: function() {
-    //   return this.listSrc.length + "00%";
-    // },
+    ulWidth: function() {
+      return this.listSrc.length * this.listWidth + "rem";
+    },
     //li宽度
     listWidth: function() {
       return 6;
     },
-    selected:function(){
-        return this.nowIndex;
-    }
+
   },
   created() {
     if (this.isAuto) {
@@ -130,45 +135,44 @@ export default {
   overflow: hidden;
   width: 100%;
   height: 100%;
+}
+//   &.img-transparent {
+//     li {
+//       opacity: 0;
+//       transition: opacity 1s;
+//       width: 0;
+//       &.cur {
+//         width: auto;
+//       }
+//       &.show {
+//         opacity: 1;
+//       }
+//     }
+//   }
+ul {
+  height: 8rem;
+  font-size: 0;
+  padding: 1rem;
+  &.tran {
+    transition: all 0.4s;
   }
-  //   &.img-transparent {
-  //     li {
-  //       opacity: 0;
-  //       transition: opacity 1s;
-  //       width: 0;
-  //       &.cur {
-  //         width: auto;
-  //       }
-  //       &.show {
-  //         opacity: 1;
-  //       }
-  //     }
-  //   }
-  ul {
-      height: 8rem;
+  li {
+    width: 6rem;
+    display: inline-block;
     font-size: 0;
-    padding: 1rem;
-    &.tran {
-      transition: all 0.4s;
-    }
-    li {
-        width: 6rem;
-        display: inline-block;
-      font-size: 0;
-      text-align: center;
-      
-    }
-    img {
-      vertical-align: middle;
-      max-width: 100%;
-      max-height: 100%;
-      &.select{
-          transform: scale(1.2,1.2);
-          border: 2px solid white;
-          border-radius: 15%
-      }
+    text-align: center;
+  }
+  img {
+    vertical-align: middle;
+    max-width: 100%;
+    max-height: 100%;
+    &.select {
+      transform: scale(1.2, 1.2);
+      border: 2px solid white;
+      border-radius: 15%;
     }
   }
+}
 
 .arrow {
   div {
@@ -176,7 +180,7 @@ export default {
     z-index: 2;
     margin: 6rem auto;
     top: 0;
-    
+
     opacity: 0.5;
     &.arrow-left {
       left: 10px;
@@ -185,7 +189,27 @@ export default {
     &.arrow-right {
       right: 10px;
       left: auto;
-      text-align: right
+      text-align: right;
+    }
+  }
+}
+.option {
+  position: absolute;
+  font-size: 0;
+  bottom: 10px;
+  text-align: center;
+  width: 100%;
+  z-index: 5;
+  top: 11rem;
+  span {
+    border-radius: 100%;
+    margin: 0 5px;
+    background: #fff;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    &.active {
+      background: #09f;
     }
   }
 }
